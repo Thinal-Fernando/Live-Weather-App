@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+import pandas as pd
 
 load_dotenv()
 api_key = os.getenv("OpenWeather_API_KEY")
@@ -14,8 +15,15 @@ def get_weather(city):
     
     data = r.json()  # Cleaning the data to add to a pandas df
 
-    print(data)
+    forecast_dict = []
+    for entry in data["list"]:
+        forecast_dict.append({
+            "time": entry["dt_txt"],
+            "temp": entry["main"]["temp"],
+            "weather": entry["weather"][0]["main"]
+        })
 
+    return pd.DataFrame(forecast_dict)
 
-
-get_weather("Colombo")
+df = get_weather("Colombo")
+print(df)
