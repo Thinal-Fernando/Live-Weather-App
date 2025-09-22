@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import pandas as pd
 import dash
 from dash import Dash, html,dcc, Input ,Output, State
+import plotly.express as px
 
 
 load_dotenv()
@@ -36,8 +37,12 @@ app.layout = html.Div([
     html.Div([
         dcc.Input(id="city-name", type="text", placeholder="Enter City"),
         html.Button("Search", id="search-btn", n_clicks=0),
-        html.Div(id="current-weather")
-    ])
+        
+    ]),
+    html.Div(id="current-weather"),
+
+    dcc.Graph(id="temp-graph"),
+    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"})
 ])
 
 
@@ -46,19 +51,35 @@ app.layout = html.Div([
     Input("search-btn", "n_clicks"),
     State("city-name", "value")
 )
-def update(n, city):
+def update_weather(n, city):
     data = get_weather(city)
     if data is None:
         return "City Not Found Please Try again!"
     
     current_weather_data = data.iloc[0]
     weather_data = html.Div([
-        html.H3(f"{city}"),
+        html.H3(f"{city} Current Time: {current_weather_data['time']}"),
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
+    
+
     return weather_data
 
+@app.callback(
+    Output("temp-graph", "figure"),
+    Input("temp-slider", "value"),
+    Input("search-btn", "n_clicks"),
+    State("city-name", "value")
+)
+
+def update_temp_graph(max_temp, n_clicks, city):
+    df = get_weather(city)
+
+    filter_data = df[df["temp"] <= max_temp]
+    fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
+    
+    return fig
 
 if __name__ == '__main__':
     app.run(debug=True)
