@@ -14,7 +14,7 @@ def get_weather(city):
     r = requests.get(f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric")
 
     if r.status_code != 200:
-        print('Error Occured') 
+        return None
     
     data = r.json()  # Cleaning the data to add to a pandas df
 
@@ -36,18 +36,20 @@ app.layout = html.Div([
     html.Div([
         dcc.Input(id="city-name", type="text", placeholder="Enter City"),
         html.Button("Search", id="search-btn", n_clicks=0),
-        html.P(id="display")
+        html.Div(id="current-weather")
     ])
 ])
 
 
 @app.callback(
-    Output("display", "children"),
+    Output("current-weather", "children"),
     Input("search-btn", "n_clicks"),
     State("city-name", "value")
 )
 def update(n, city):
-    return f"You searched for: {city} and Number of clicks {n}"
+    data = get_weather(city)
+    if data is None:
+        return "City Not Found Please Try again!"
 
 
 if __name__ == '__main__':
