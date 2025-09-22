@@ -2,6 +2,9 @@ import requests
 import os
 from dotenv import load_dotenv
 import pandas as pd
+import dash
+from dash import Dash, html
+
 
 load_dotenv()
 api_key = os.getenv("OpenWeather_API_KEY")
@@ -25,5 +28,12 @@ def get_weather(city):
 
     return pd.DataFrame(forecast_dict)
 
-df = get_weather("Colombo")
-print(df)
+app = dash.Dash(__name__)
+
+app.layout = html.Div([
+    html.H1("Test")
+])
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
