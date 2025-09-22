@@ -42,12 +42,15 @@ app.layout = html.Div([
     html.Div(id="current-weather"),
 
     dcc.Graph(id="temp-graph"),
-    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"})
+    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+
+    dcc.Graph(id="humidity-Graph")
 ])
 
 
 @app.callback(
     Output("current-weather", "children"),
+    Output("humidity-Graph", "figure"),
     Input("search-btn", "n_clicks"),
     State("city-name", "value")
 )
@@ -62,9 +65,10 @@ def update_weather(n, city):
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
+    humidity_fig = px.line(data, x="time", y="temp", title="Temperature Over Time")
     
 
-    return weather_data
+    return weather_data, humidity_fig
 
 @app.callback(
     Output("temp-graph", "figure"),
@@ -77,9 +81,9 @@ def update_temp_graph(max_temp, n_clicks, city):
     df = get_weather(city)
 
     filter_data = df[df["temp"] <= max_temp]
-    fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
+    temp_fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
     
-    return fig
+    return temp_fig
 
 if __name__ == '__main__':
     app.run(debug=True)
