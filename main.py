@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 import pandas as pd
 import dash
-from dash import Dash, html
+from dash import Dash, html,dcc, Input ,Output, State
 
 
 load_dotenv()
@@ -31,8 +31,23 @@ def get_weather(city):
 app = dash.Dash(__name__)
 
 app.layout = html.Div([
-    html.H1("Test")
+    html.H1("Welcome to the Weather APP"),
+
+    html.Div([
+        dcc.Input(id="city-name", type="text", placeholder="Enter City"),
+        html.Button("Search", id="search-btn", n_clicks=0),
+        html.P(id="display")
+    ])
 ])
+
+
+@app.callback(
+    Output("display", "children"),
+    Input("search-btn", "n_clicks"),
+    State("city-name", "value")
+)
+def update(n, city):
+    return f"You searched for: {city} and Number of clicks {n}"
 
 
 if __name__ == '__main__':
