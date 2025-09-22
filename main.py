@@ -50,6 +50,14 @@ def update(n, city):
     data = get_weather(city)
     if data is None:
         return "City Not Found Please Try again!"
+    
+    current_weather_data = data.iloc[0]
+    weather_data = html.Div([
+        html.H3(f"{city}"),
+        html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
+    ])
+
+    return weather_data
 
 
 if __name__ == '__main__':
