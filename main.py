@@ -24,7 +24,8 @@ def get_weather(city):
         forecast_dict.append({
             "time": entry["dt_txt"],
             "temp": entry["main"]["temp"],
-            "weather": entry["weather"][0]["main"]
+            "weather": entry["weather"][0]["main"],
+            "humidity":entry["main"]["humidity"]
         })
 
     return pd.DataFrame(forecast_dict)
@@ -65,7 +66,7 @@ def update_weather(n, city):
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
-    humidity_fig = px.line(data, x="time", y="temp", title="Temperature Over Time")
+    humidity_fig = px.line(data, x="time", y="humidity", title="Temperature Over Time")
     
 
     return weather_data, humidity_fig
