@@ -106,7 +106,14 @@ def update_weather(n, city):
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], text=[city_info["name"]], zoom=6, height=700)
+    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], zoom=10, height=700,
+                            hover_data={
+                                "City": [city_info["name"]],
+                                "Temperature (C)" : [df.iloc[0]["temp"]],
+                                "Weather": [df.iloc[0]["weather"]],
+                                "Humidity (%)": [df.iloc[0]["humidity"]],
+                                "Wind (m/s)": [df.iloc[0]["wind"]]
+                            } )
     map_fig.update_layout(mapbox_style="open-street-map")
 
 
