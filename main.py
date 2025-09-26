@@ -50,7 +50,7 @@ app.sidebar = dbc.Offcanvas([
 
 
 app.layout = dbc.Container([
-    html.H1("Welcome to the Weather APP"),
+    html.H1(id="heading"),
 
     dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
 
@@ -112,6 +112,7 @@ def toggle_sidebar(n, is_open):
 
 
 @app.callback(
+    Output("heading", "children"),
     Output("current-weather", "children"),
     Output("humidity-graph", "figure"),
     Output("wind-graph", "figure"),
@@ -126,7 +127,8 @@ def update_weather(n, city):
     
     df, city_info = data
 
-    
+    heading = html.H1([ "Welcome to the Weather APP" if city is None else f"Viewing: {city}" ])
+
     current_weather_data = df.iloc[0]
     weather_data = html.Div([
         html.H3(f"{city} Current Time: {current_weather_data['time']}"),
@@ -147,7 +149,7 @@ def update_weather(n, city):
     map_fig.update_layout(mapbox_style="open-street-map")
 
 
-    return weather_data, humidity_fig, wind_fig, map_fig
+    return heading, weather_data, humidity_fig, wind_fig, map_fig
 
 @app.callback(
     Output("temp-graph", "figure"),
