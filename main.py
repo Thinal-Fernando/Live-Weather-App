@@ -30,7 +30,7 @@ def get_weather(city):
             "wind":entry["wind"]["speed"]
         })
 
-    return pd.DataFrame(forecast_dict)
+    return pd.DataFrame(forecast_dict), data["city"]
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
@@ -61,7 +61,7 @@ app.layout = dbc.Container([
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
-                    dcc.Graph(id="humidity-Graph")
+                    dcc.Graph(id="humidity-graph")
                 ])
             ])
         ], width=6 ),
@@ -74,14 +74,16 @@ app.layout = dbc.Container([
         ], width=6)
 
         
-    ])
+    ]),
+    dcc.Graph(id="map-view")
 ])
 
 
 @app.callback(
     Output("current-weather", "children"),
-    Output("humidity-Graph", "figure"),
+    Output("humidity-graph", "figure"),
     Output("wind-graph", "figure"),
+    Output("map-view", "figure"),
     Input("search-btn", "n_clicks"),
     State("city-name", "value")
 )
@@ -90,16 +92,23 @@ def update_weather(n, city):
     if data is None:
         return "City Not Found Please Try again!"
     
-    current_weather_data = data.iloc[0]
+    df, city_info = data
+
+    
+    current_weather_data = df.iloc[0]
     weather_data = html.Div([
         html.H3(f"{city} Current Time: {current_weather_data['time']}"),
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
-    humidity_fig = px.line(data, x="time", y="humidity", title="Humidity Over Time")
-    wind_fig =  px.line(data, x="time", y="wind", title="Wind Speed Over Time")
+    humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
+    wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    return weather_data, humidity_fig, wind_fig
+    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], text=[city_info["name"]], zoom=6)
+    map_fig.update_layout(mapbox_style="open-street-map")
+
+
+    return weather_data, humidity_fig, wind_fig, map_fig
 
 @app.callback(
     Output("temp-graph", "figure"),
@@ -109,7 +118,7 @@ def update_weather(n, city):
 )
 
 def update_temp_graph(max_temp, n_clicks, city):
-    df = get_weather(city)
+    df,_ = get_weather(city)
 
     filter_data = df[df["temp"] <= max_temp]
     temp_fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
