@@ -32,9 +32,9 @@ def get_weather(city):
 
     return pd.DataFrame(forecast_dict)
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.layout = html.Div([
+app.layout = dbc.Container([
     html.H1("Welcome to the Weather APP"),
 
     html.Div([
@@ -44,9 +44,19 @@ app.layout = html.Div([
     ]),
     html.Div(id="current-weather"),
 
-    dcc.Graph(id="temp-graph"),
-    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="temp-graph"),
+                    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
 
+                ])
+            ])
+        ])
+        
+    ]),
+   
     dbc.Row([
         dbc.Col([
             dbc.Card([
@@ -86,8 +96,8 @@ def update_weather(n, city):
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
-    humidity_fig = px.line(data, x="time", y="humidity", title="Temperature Over Time")
-    wind_fig =  px.line(data, x="time", y="wind", title="Temperature Over Time")
+    humidity_fig = px.line(data, x="time", y="humidity", title="Humidity Over Time")
+    wind_fig =  px.line(data, x="time", y="wind", title="Wind Speed Over Time")
 
     return weather_data, humidity_fig, wind_fig
 
