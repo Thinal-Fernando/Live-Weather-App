@@ -43,7 +43,9 @@ app.layout = dbc.Container([
         
     ]),
     html.Div(id="current-weather"),
-
+    
+    dcc.Graph(id="map-view"),
+    
     dbc.Row([
         dbc.Col([
             dbc.Card([
@@ -75,7 +77,7 @@ app.layout = dbc.Container([
 
         
     ]),
-    dcc.Graph(id="map-view")
+    
 ])
 
 
@@ -104,7 +106,7 @@ def update_weather(n, city):
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], text=[city_info["name"]], zoom=6)
+    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], text=[city_info["name"]], zoom=6, height=700)
     map_fig.update_layout(mapbox_style="open-street-map")
 
 
