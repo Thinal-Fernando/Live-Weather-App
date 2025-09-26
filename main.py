@@ -5,6 +5,7 @@ import pandas as pd
 import dash
 from dash import Dash, html,dcc, Input ,Output, State
 import plotly.express as px
+import dash_bootstrap_components as dbc
 
 
 load_dotenv()
@@ -25,7 +26,8 @@ def get_weather(city):
             "time": entry["dt_txt"],
             "temp": entry["main"]["temp"],
             "weather": entry["weather"][0]["main"],
-            "humidity":entry["main"]["humidity"]
+            "humidity":entry["main"]["humidity"],
+            "wind":entry["wind"]["speed"]
         })
 
     return pd.DataFrame(forecast_dict)
@@ -45,13 +47,31 @@ app.layout = html.Div([
     dcc.Graph(id="temp-graph"),
     dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
 
-    dcc.Graph(id="humidity-Graph")
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="humidity-Graph")
+                ])
+            ])
+        ], width=6 ),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="wind-graph")
+                ])
+            ])
+        ], width=6)
+
+        
+    ])
 ])
 
 
 @app.callback(
     Output("current-weather", "children"),
     Output("humidity-Graph", "figure"),
+    Output("wind-graph", "figure"),
     Input("search-btn", "n_clicks"),
     State("city-name", "value")
 )
@@ -67,9 +87,9 @@ def update_weather(n, city):
     ])
 
     humidity_fig = px.line(data, x="time", y="humidity", title="Temperature Over Time")
-    
+    wind_fig =  px.line(data, x="time", y="wind", title="Temperature Over Time")
 
-    return weather_data, humidity_fig
+    return weather_data, humidity_fig, wind_fig
 
 @app.callback(
     Output("temp-graph", "figure"),
