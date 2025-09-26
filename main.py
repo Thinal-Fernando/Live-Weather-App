@@ -34,8 +34,27 @@ def get_weather(city):
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
+
+app.sidebar = dbc.Offcanvas([
+        html.H5("Options", className="mb-3"),
+
+        html.Hr(),
+
+        dbc.Button("Home", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
+
+        dbc.Button("Details", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
+
+
+    ],id="sidebar", placement="start", is_open=False,
+)
+
+
 app.layout = dbc.Container([
     html.H1("Welcome to the Weather APP"),
+
+    dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
+
+    app.sidebar,
 
     html.Div([
         dcc.Input(id="city-name", type="text", placeholder="Enter City"),
@@ -79,6 +98,17 @@ app.layout = dbc.Container([
     ]),
     
 ])
+
+@app.callback(
+    Output("sidebar", "is_open"),
+    Input("menu-button", "n_clicks"),
+    State("sidebar", "is_open"),
+)
+def toggle_sidebar(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
 
 
 @app.callback(
@@ -133,6 +163,7 @@ def update_temp_graph(max_temp, n_clicks, city):
     temp_fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
     
     return temp_fig
+
 
 if __name__ == '__main__':
     app.run(debug=True)
