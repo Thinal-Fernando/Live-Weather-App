@@ -97,7 +97,7 @@ app.layout = dbc.Container([
         
     ]),
     
-])
+], fluid=True)
 
 @app.callback(
     Output("sidebar", "is_open"),
