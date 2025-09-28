@@ -36,79 +36,76 @@ def get_weather(city):
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 
-app.sidebar = dbc.Offcanvas([
-        html.H5("Options", className="mb-3"),
-
-        html.Hr(),
-
-        dbc.Button("Home", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
-
-        dbc.Button("Details", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
-
-
-    ],id="sidebar", placement="start", is_open=False,
-)
-
-
 app.layout = dbc.Container([
-    html.H1(id="heading"),
-
-    dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
-
-    app.sidebar,
-
-    html.Div([
-        dcc.Input(id="city-name", type="text", placeholder="Enter City"),
-        html.Button("Search", id="search-btn", n_clicks=0),
-        
-    ]),
-    html.Div(id="current-weather"),
-    
-    dcc.Graph(id="map-view"),
-    
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="temp-graph"),
-                    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
-
-                ])
+                dbc.CardHeader("left side")
             ])
-        ])
+        ],width=2),
         
-    ]),
-   
-    dbc.Row([
+
+        dbc.Col([
+            html.H1(id="heading"),
+
+            dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
+
+            html.Div([
+                dcc.Input(id="city-name", type="text", placeholder="Enter City"),
+                html.Button("Search", id="search-btn", n_clicks=0),
+                
+            ]),
+            html.Div(id="current-weather"),
+            dbc.Row([
+                dbc.Col([
+                    dcc.Graph(id="map-view")
+                ],width=12)
+            ]),
+            
+            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="temp-graph"),
+                            dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+
+                        ])
+                    ])
+                ])
+                
+            ]),
+        
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="humidity-graph")
+                        ])
+                    ])
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="wind-graph")
+                        ])
+                    ])
+                ], width=6)
+
+                
+            ]),
+        ], width=8),
         dbc.Col([
             dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="humidity-graph")
-                ])
+                dbc.CardHeader("Right side")
             ])
-        ], width=6 ),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="wind-graph")
-                ])
-            ])
-        ], width=6)
+        ], width=2)
 
-        
-    ]),
+    ])
+    
     
 ], fluid=True)
 
-@app.callback(
-    Output("sidebar", "is_open"),
-    Input("menu-button", "n_clicks"),
-    State("sidebar", "is_open"),
-)
-def toggle_sidebar(n, is_open):
-    if n:
-        return not is_open
-    return is_open
 
 
 
