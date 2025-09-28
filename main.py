@@ -27,7 +27,8 @@ def get_weather(city):
             "temp": entry["main"]["temp"],
             "weather": entry["weather"][0]["main"],
             "humidity":entry["main"]["humidity"],
-            "wind":entry["wind"]["speed"]
+            "wind":entry["wind"]["speed"],
+            "icon": entry["weather"][0]["icon"]
         })
 
     return pd.DataFrame(forecast_dict), data["city"]
@@ -131,7 +132,9 @@ def update_weather(n, city):
 
     current_weather_data = df.iloc[0]
     weather_data = html.Div([
-        html.H3(f"{city} Current Time: {current_weather_data['time']}"),
+        html.Img(src=f"http://openweathermap.org/img/wn/{current_weather_data['icon']}@2x.png"),
+        html.H3(f"{city} , {city_info['country']}"),
+        html.P(f"Current Time: {current_weather_data['time']}"),
         html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
     ])
 
@@ -144,7 +147,7 @@ def update_weather(n, city):
                                 "Temperature (C)" : [df.iloc[0]["temp"]],
                                 "Weather": [df.iloc[0]["weather"]],
                                 "Humidity (%)": [df.iloc[0]["humidity"]],
-                                "Wind (m/s)": [df.iloc[0]["wind"]]
+                                "Wind (m/s)": [df.iloc[0]["wind"]],
                             } )
     map_fig.update_layout(mapbox_style="open-street-map")
 
