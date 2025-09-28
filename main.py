@@ -134,7 +134,7 @@ def update_weather(n, city):
 
 
     weather_stats = [
-        {"emoji": "🍃", "value": f"{current_weather_data['wind']} km/h"},
+        {"emoji": "🍃", "value": f"{round(current_weather_data['wind'], 1)} km/h"},
         {"emoji": "💧", "value": f"{current_weather_data['humidity']}%"},
     ]
 
@@ -162,7 +162,7 @@ def update_weather(n, city):
                                     html.Div(
                                         className="d-flex flex-column text-center mt-3 mb-3",
                                         children=[
-                                            html.H6(f"{current_weather_data['temp']}°C",
+                                            html.H6(f"{round(current_weather_data['temp'],1)}°C",
                                                     style={"font-size": "2rem", "font-weight": "bold"}),
                                             html.Span(current_weather_data["weather"],
                                                     className="small", style={"color": "#868B94"})
