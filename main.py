@@ -131,12 +131,74 @@ def update_weather(n, city):
     heading = html.H1([ "Welcome to the Weather APP" if city is None else f"Viewing: {city}" ])
 
     current_weather_data = df.iloc[0]
-    weather_data = html.Div([
-        html.Img(src=f"http://openweathermap.org/img/wn/{current_weather_data['icon']}@2x.png"),
-        html.H3(f"{city} , {city_info['country']}"),
-        html.P(f"Current Time: {current_weather_data['time']}"),
-        html.P(f"{current_weather_data['weather' ]} | {current_weather_data['temp']} |")
-    ])
+
+
+    weather_stats = [
+        {"emoji": "🍃", "value": f"{current_weather_data['wind']} km/h"},
+        {"emoji": "💧", "value": f"{current_weather_data['humidity']}%"},
+    ]
+
+    weather_data = html.Div(
+        className="row d-flex justify-content-center py-5",
+        children=[
+            html.Div(
+                className="col-md-6 col-lg-4 col-xl-3",  
+                children=[
+                    html.Div(
+                        className="card text-body",
+                        style={"border-radius": "20px"},
+                        children=[
+                            html.Div(
+                                className="card-body p-3",
+                                children=[
+                
+                                    html.Div(
+                                        className="d-flex",
+                                        children=[
+                                            html.H6(city, className="flex-grow-1"),
+                                            html.H6(current_weather_data["time"])
+                                        ]
+                                    ),
+                                    html.Div(
+                                        className="d-flex flex-column text-center mt-3 mb-3",
+                                        children=[
+                                            html.H6(f"{current_weather_data['temp']}°C",
+                                                    style={"font-size": "2rem", "font-weight": "bold"}),
+                                            html.Span(current_weather_data["weather"],
+                                                    className="small", style={"color": "#868B94"})
+                                        ]
+                                    ),
+                               
+                                    html.Div(
+                                        className="d-flex align-items-center",
+                                        children=[
+                                            html.Div(
+                                                className="flex-grow-1",
+                                                style={"font-size": "0.9rem"},
+                                                children=[
+                                                    html.Div(f"{stat['emoji']} {stat['value']}", className="mb-1")
+                                                    for stat in weather_stats
+                                                ]
+                                            ),
+                                            html.Div(
+                                                children=html.Img(
+                                                    src=f"http://openweathermap.org/img/wn/{current_weather_data['icon']}@2x.png",
+                                                    width="70px"
+                                                )
+                                            )
+                                        ]
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                ]
+            )
+        ]
+    )
+
+    
+
 
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
