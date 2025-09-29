@@ -40,20 +40,20 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
             dbc.Card([
-                dbc.CardHeader("left side"),
+                dbc.CardHeader("Check the weather forecast", style={"fontWeight": "bold", "fontSize": "18px", "textAlign": "center", "padding": "10px"}),
 
                 html.Div([
-                dcc.Input(id="city-name", type="text", placeholder="Enter City"),
+                dcc.Input(id="city-name", type="text", placeholder="Enter City..."),
                 html.Button("Search", id="search-btn", n_clicks=0),
                 
-            ]),
+                ], className="mt-5 ms-3"),
             
 
                 dbc.CardBody([
                     html.Div(id="current-weather", className="w-100"),
                 ], style={" width":"100% "})
                
-            ])
+            ], style={"height" : "100%"})
         ],width=2),
         
 
@@ -158,7 +158,7 @@ def update_weather(n, city):
                                         className="d-flex",
                                         children=[
                                             html.H6(city, className="flex-grow-1"),
-                                            html.H6(current_weather_data["time"])
+                                            html.H6(current_weather_data["time"].split(" ")[1])
                                         ]
                                     ),
                                     html.Div(
