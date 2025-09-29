@@ -12,8 +12,8 @@ load_dotenv()
 api_key = os.getenv("OpenWeather_API_KEY")
 
 
-def get_weather(city):
-    r = requests.get(f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric")
+def get_weather(city, units = "metric"):
+    r = requests.get(f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units={units}")
 
     if r.status_code != 200:
         return None
@@ -47,9 +47,17 @@ app.layout = dbc.Container([
                 html.Button("Search", id="search-btn", n_clicks=0),
                 
                 ], className="mt-5 ms-3"),
-            
 
-                dbc.CardBody([
+                dbc.CardBody([ 
+                    dbc.RadioItems(
+                        id="unit-selector",
+                        options=[
+                            {"label": "Celsius (°C)", "value": "metric"},
+                            {"label": "Fahrenheit (°F)", "value": "imperial"}
+                        ],
+                        value = "metric", inline=True
+                    ),
+
                     html.Div(id="current-weather", className="w-100"),
                 ], style={" width":"100% "})
                
@@ -122,10 +130,11 @@ app.layout = dbc.Container([
     Output("wind-graph", "figure"),
     Output("map-view", "figure"),
     Input("search-btn", "n_clicks"),
-    State("city-name", "value")
+    State("city-name", "value"),
+    State("unit-selector", "value")
 )
-def update_weather(n, city):
-    data = get_weather(city)
+def update_weather(n, city, units):
+    data = get_weather(city, units)
     if data is None:
         return "City Not Found Please Try again!"
     
@@ -222,11 +231,12 @@ def update_weather(n, city):
     Output("temp-graph", "figure"),
     Input("temp-slider", "value"),
     Input("search-btn", "n_clicks"),
-    State("city-name", "value")
+    State("city-name", "value"),
+    State("unit-selector", "value")
 )
 
-def update_temp_graph(max_temp, n_clicks, city):
-    df,_ = get_weather(city)
+def update_temp_graph(max_temp, n_clicks, city, units):
+    df,_ = get_weather(city, units)
 
     filter_data = df[df["temp"] <= max_temp]
     temp_fig = px.histogram(filter_data, x="temp", nbins=10, title= f"Temperature Graph ({max_temp})")
