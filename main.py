@@ -41,6 +41,14 @@ app.layout = dbc.Container([
         dbc.Col([
             dbc.Card([
                 dbc.CardHeader("left side"),
+
+                html.Div([
+                dcc.Input(id="city-name", type="text", placeholder="Enter City"),
+                html.Button("Search", id="search-btn", n_clicks=0),
+                
+            ]),
+            
+
                 dbc.CardBody([
                     html.Div(id="current-weather", className="w-100"),
                 ], style={" width":"100% "})
@@ -52,13 +60,7 @@ app.layout = dbc.Container([
         dbc.Col([
             html.H1(id="heading"),
 
-            dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
 
-            html.Div([
-                dcc.Input(id="city-name", type="text", placeholder="Enter City"),
-                html.Button("Search", id="search-btn", n_clicks=0),
-                
-            ]),
             
             dbc.Row([
                 dbc.Col([
