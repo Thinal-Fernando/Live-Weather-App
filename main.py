@@ -38,33 +38,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 app.layout = dbc.Container([
     dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader("Check the weather forecast", style={"fontWeight": "bold", "fontSize": "18px", "textAlign": "center", "padding": "10px"}),
-
-                html.Div([
-                dcc.Input(id="city-name", type="text", placeholder="Enter City..."),
-                html.Button("Search", id="search-btn", n_clicks=0),
-                
-                ], className="mt-5 ms-3"),
-
-                dbc.CardBody([ 
-                    dbc.RadioItems(
-                        id="unit-selector",
-                        options=[
-                            {"label": "Celsius (°C)", "value": "metric"},
-                            {"label": "Fahrenheit (°F)", "value": "imperial"}
-                        ],
-                        value = "metric", inline=True
-                    ),
-
-                    html.Div(id="current-weather", className="w-100"),
-                ], style={" width":"100% "})
-               
-            ], style={"height" : "100%"})
-        ],width=2),
         
-
         dbc.Col([
             html.H1(id="heading"),
 
@@ -108,12 +82,34 @@ app.layout = dbc.Container([
 
                 
             ]),
-        ], width=8),
+        ], width=9),
+
+
         dbc.Col([
             dbc.Card([
-                dbc.CardHeader("Right side")
-            ])
-        ], width=2)
+                dbc.CardHeader("Check the weather forecast", style={"fontWeight": "bold", "fontSize": "18px", "textAlign": "center", "padding": "10px"}),
+
+                html.Div([
+                dcc.Input(id="city-name", type="text", placeholder="Enter City..."),
+                html.Button("Search", id="search-btn", n_clicks=0),
+                
+                ], className="mt-5 ms-3"),
+
+                dbc.CardBody([ 
+                    dbc.RadioItems(
+                        id="unit-selector",
+                        options=[
+                            {"label": "Celsius (°C)", "value": "metric"},
+                            {"label": "Fahrenheit (°F)", "value": "imperial"}
+                        ],
+                        value = "metric", inline=True
+                    ),
+
+                    html.Div(id="current-weather", className="w-100"),
+                ], style={" width":"100% "})
+               
+            ], style={"height" : "100%"})
+        ],width=3),
 
     ])
     
