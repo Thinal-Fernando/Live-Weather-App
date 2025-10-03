@@ -61,6 +61,8 @@ app.layout = dbc.Container([
 
             app.sidebar,
             
+            dbc.Button("Temperature", id="temp-overlay", n_clicks=0,color="info", className="mb-3"),
+
             dbc.Row([
                 dbc.Col([
                     dcc.Graph(id="map-view")
@@ -153,10 +155,11 @@ def toggle_sidebar(n, is_open):
     Output("wind-graph", "figure"),
     Output("map-view", "figure"),
     Input("search-btn", "n_clicks"),
+    Input("temp-overlay", "n_clicks"),
     State("city-name", "value"),
     State("unit-selector", "value")
 )
-def update_weather(n, city, units):
+def update_weather(n,  temp_clicks, city, units):
     data = get_weather(city, units)
     if data is None:
         return "City Not Found Please Try again!"
@@ -247,15 +250,16 @@ def update_weather(n, city, units):
                             } )
     map_fig.update_layout(mapbox_style="open-street-map")
 
-    map_fig.update_layout(
-    mapbox_layers=[
-        {
-            "sourcetype": "raster",
-            "source": [f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}"],
-            "below": "traces"
-        }
-    ]
-)
+    if temp_clicks % 2 == 1:
+        map_fig.update_layout(
+            mapbox_layers=[
+                {
+                    "sourcetype": "raster",
+                    "source": [f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}"],
+                    "below": "traces"
+                }
+            ]
+        )
 
 
     return heading, weather_data, humidity_fig, wind_fig, map_fig
