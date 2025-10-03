@@ -257,7 +257,11 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], zoom=8, height=700,
+    ctx = dash.callback_context
+    overlay_url = None
+    zoom_level = 10
+
+    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], height=700,
                             hover_data={
                                 "City": [city_info["name"]],
                                 "Temperature (C)" : [df.iloc[0]["temp"]],
@@ -278,24 +282,26 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
 
 
 
-    ctx = dash.callback_context
-    overlay_url = None
+    
     if ctx.triggered:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         if button_id in layer_urls:
             overlay_url = layer_urls[button_id]
+            zoom_level = 5
 
     
-    if overlay_url:
-        map_fig.update_layout(
-            mapbox_layers=[
-                {
-                    "sourcetype": "raster",
-                    "source": [overlay_url],
-                    "below": "traces"
-                }
-            ]
-        )
+    map_fig.update_layout(
+    mapbox={
+        "zoom": zoom_level,
+        "layers": [
+            {
+                "sourcetype": "raster",
+                "source": [overlay_url],
+                "below": "traces"
+            }
+        ] if overlay_url else []
+    }
+)
      
 
     return heading, weather_data, humidity_fig, wind_fig, map_fig
