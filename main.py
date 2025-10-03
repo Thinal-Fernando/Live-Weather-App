@@ -237,7 +237,7 @@ def update_weather(n, city, units):
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig =  px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], zoom=10, height=700,
+    map_fig = px.scatter_mapbox(lat=[city_info["coord"]["lat"]], lon=[city_info["coord"]["lon"]], zoom=8, height=700,
                             hover_data={
                                 "City": [city_info["name"]],
                                 "Temperature (C)" : [df.iloc[0]["temp"]],
@@ -246,6 +246,16 @@ def update_weather(n, city, units):
                                 "Wind (m/s)": [df.iloc[0]["wind"]],
                             } )
     map_fig.update_layout(mapbox_style="open-street-map")
+
+    map_fig.update_layout(
+    mapbox_layers=[
+        {
+            "sourcetype": "raster",
+            "source": [f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}"],
+            "below": "traces"
+        }
+    ]
+)
 
 
     return heading, weather_data, humidity_fig, wind_fig, map_fig
