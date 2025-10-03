@@ -61,7 +61,14 @@ app.layout = dbc.Container([
 
             app.sidebar,
             
-            dbc.Button("Temperature", id="temp-overlay", n_clicks=0,color="info", className="mb-3"),
+            html.Div([
+                dbc.Button("Temperature", id="temp-overlay", n_clicks=0,color="info", className="mb-3"),
+                dbc.Button("Precipitation", id="precipitation-overlay", n_clicks=0,color="info", className="mb-3"),
+                dbc.Button("Pressure", id="pressure-overlay", n_clicks=0,color="info", className="mb-3"),
+                dbc.Button("Wind speed", id="wind-overlay", n_clicks=0,color="info", className="mb-3"),
+                dbc.Button("Clouds", id="cloud-overlay", n_clicks=0,color="info", className="mb-3"),
+            ]),
+            
 
             dbc.Row([
                 dbc.Col([
@@ -156,11 +163,15 @@ def toggle_sidebar(n, is_open):
     Output("map-view", "figure"),
     Input("search-btn", "n_clicks"),
     Input("temp-overlay", "n_clicks"),
+    Input("precipitation-overlay", "n_clicks"),
+    Input("pressure-overlay", "n_clicks"),
+    Input("wind-overlay", "n_clicks"),
+    Input("cloud-overlay", "n_clicks"),
     Input("unit-selector", "value"),
     State("city-name", "value")
     
 )
-def update_weather(n,  temp_clicks, units, city):
+def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_clicks, cloud_clicks, units, city):
     data = get_weather(city, units)
     if data is None:
         return "City Not Found Please Try again!"
@@ -252,17 +263,36 @@ def update_weather(n,  temp_clicks, units, city):
                             } )
     map_fig.update_layout(mapbox_style="open-street-map")
 
-    if temp_clicks % 2 == 1:
+    
+    layer_urls = {
+        "temp-overlay": f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}",
+        "precipitation-overlay": f"https://tile.openweathermap.org/map/precipitation_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}",
+        "pressure-overlay": f"https://tile.openweathermap.org/map/pressure_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}",
+        "wind-overlay": f"https://tile.openweathermap.org/map/wind_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}",
+        "cloud-overlay": f"https://tile.openweathermap.org/map/clouds_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}"
+    }
+
+
+
+    ctx = dash.callback_context
+    overlay_url = None
+    if ctx.triggered:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        if button_id in layer_urls:
+            overlay_url = layer_urls[button_id]
+
+    
+    if overlay_url:
         map_fig.update_layout(
             mapbox_layers=[
                 {
                     "sourcetype": "raster",
-                    "source": [f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}"],
+                    "source": [overlay_url],
                     "below": "traces"
                 }
             ]
         )
-
+     
 
     return heading, weather_data, humidity_fig, wind_fig, map_fig
 
