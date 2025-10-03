@@ -156,10 +156,11 @@ def toggle_sidebar(n, is_open):
     Output("map-view", "figure"),
     Input("search-btn", "n_clicks"),
     Input("temp-overlay", "n_clicks"),
-    State("city-name", "value"),
-    State("unit-selector", "value")
+    Input("unit-selector", "value"),
+    State("city-name", "value")
+    
 )
-def update_weather(n,  temp_clicks, city, units):
+def update_weather(n,  temp_clicks, units, city):
     data = get_weather(city, units)
     if data is None:
         return "City Not Found Please Try again!"
@@ -170,6 +171,7 @@ def update_weather(n,  temp_clicks, city, units):
 
     current_weather_data = df.iloc[0]
 
+    unit_symbol = "°C" if units == "metric" else "°F"
 
     weather_stats = [
         {"emoji": "🍃", "value": f"{round(current_weather_data['wind'], 1)} km/h"},
@@ -199,7 +201,7 @@ def update_weather(n,  temp_clicks, city, units):
                                     html.Div(
                                         className="d-flex flex-column text-center mt-3 mb-3",
                                         children=[
-                                            html.H6(f"{round(current_weather_data['temp'],1)}°C",
+                                            html.H6(f"{round(current_weather_data['temp'],1)}{unit_symbol}",
                                                     style={"font-size": "2rem", "font-weight": "bold"}),
                                             html.Span(current_weather_data["weather"],
                                                     className="small", style={"color": "#868B94"})
