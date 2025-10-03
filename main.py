@@ -62,19 +62,23 @@ app.layout = dbc.Container([
             app.sidebar,
             
             html.Div([
-                dbc.Button("Temperature", id="temp-overlay", n_clicks=0,color="info", className="mb-3"),
-                dbc.Button("Precipitation", id="precipitation-overlay", n_clicks=0,color="info", className="mb-3"),
-                dbc.Button("Pressure", id="pressure-overlay", n_clicks=0,color="info", className="mb-3"),
-                dbc.Button("Wind speed", id="wind-overlay", n_clicks=0,color="info", className="mb-3"),
-                dbc.Button("Clouds", id="cloud-overlay", n_clicks=0,color="info", className="mb-3"),
-            ]),
-            
+                
+                dcc.Graph(id="map-view", style={"height": "700px"}),
 
-            dbc.Row([
-                dbc.Col([
-                    dcc.Graph(id="map-view")
-                ],width=12)
-            ]),
+                dbc.ButtonGroup([
+                    dbc.Button(" 🌡 Temperature", id="temp-overlay", n_clicks=0,color="info", className="mb-3"),
+                    dbc.Button(" 🌧 Precipitation", id="precipitation-overlay", n_clicks=0,color="info", className="mb-3"), 
+                    dbc.Button(" 🕛 Pressure", id="pressure-overlay", n_clicks=0,color="info", className="mb-3"), 
+                    dbc.Button(" 💨 Wind speed", id="wind-overlay", n_clicks=0,color="info", className="mb-3"), 
+                    dbc.Button(" ☁︎ Clouds", id="cloud-overlay", n_clicks=0,color="info", className="mb-3"),
+                ], size="sm", className="button-group", style={
+                    "position": "absolute",
+                    "bottom": "15px",
+                    "left": "29%",
+                    "zIndex": "999"
+                }),
+
+            ], style={"position": "relative"}),
             
             
             dbc.Row([
