@@ -114,8 +114,8 @@ app.layout = dbc.Container([
             ]),
 
             dbc.Row([
-                html.H3("Hourly Forecast"),
-                html.Div(id="hourly-cards")
+                html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
+                html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5")
 
 
             ])
@@ -267,10 +267,10 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
             html.H6(row["time"].split(" ")[1],className="text-center" ),
             html.Img(
                 src=f"http://openweathermap.org/img/wn/{row['icon']}@2x.png",
-           
+                style={"width": "50px", "margin": "auto"}
             ),
-            html.H6(f"{round(row['temp'], 1)}{unit_symbol}"),
-            html.Small(row["weather"])
+            html.H6(f"{round(row['temp'], 1)}{unit_symbol}", className="text-center mt-2"),
+            html.Small(row["weather"], className="text-center d-block text-muted")
         ])
     ])
     ]
