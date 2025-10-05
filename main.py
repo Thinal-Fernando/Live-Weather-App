@@ -112,6 +112,14 @@ app.layout = dbc.Container([
 
                 
             ]),
+
+            dbc.Row([
+                html.H3("Hourly Forecast"),
+                html.Div(id="hourly-cards")
+
+
+            ])
+
         ], width=9),
 
 
@@ -165,6 +173,7 @@ def toggle_sidebar(n, is_open):
     Output("humidity-graph", "figure"),
     Output("wind-graph", "figure"),
     Output("map-view", "figure"),
+    Output("hourly-cards", "children"),
     Input("search-btn", "n_clicks"),
     Input("temp-overlay", "n_clicks"),
     Input("precipitation-overlay", "n_clicks"),
@@ -251,7 +260,20 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
         ]
     )
 
-    
+    row = df.iloc[0]
+
+    card_data = [dbc.Card([
+        dbc.CardBody([
+            html.H6(row["time"].split(" ")[1],className="text-center" ),
+            html.Img(
+                src=f"http://openweathermap.org/img/wn/{row['icon']}@2x.png",
+           
+            ),
+            html.H6(f"{round(row['temp'], 1)}{unit_symbol}"),
+            html.Small(row["weather"])
+        ])
+    ])
+    ]
 
 
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
@@ -304,7 +326,7 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
 )
      
 
-    return heading, weather_data, humidity_fig, wind_fig, map_fig
+    return heading, weather_data, humidity_fig, wind_fig, map_fig, card_data
 
 @app.callback(
     Output("temp-graph", "figure"),
