@@ -35,7 +35,7 @@ def get_weather(city, units = "metric"):
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.sidebar = dbc.Offcanvas([
+app.sidebar = dbc.Offcanvas([                         ## SideBar
         html.H5("Options", className="mb-3"),
 
         html.Hr(),
@@ -51,7 +51,8 @@ app.sidebar = dbc.Offcanvas([
 
 
 
-app.layout = dbc.Container([
+home_layout = dbc.Container([             ## Home
+
     dbc.Row([
         
         dbc.Col([
@@ -81,38 +82,7 @@ app.layout = dbc.Container([
             ], style={"position": "relative"}),
             
             
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            dcc.Graph(id="temp-graph"),
-                            dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
-
-                        ])
-                    ])
-                ])
-                
-            ]),
-        
-            dbc.Row([
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            dcc.Graph(id="humidity-graph")
-                        ])
-                    ])
-                ], width=6),
-                dbc.Col([
-                    dbc.Card([
-                        dbc.CardBody([
-                            dcc.Graph(id="wind-graph")
-                        ])
-                    ])
-                ], width=6)
-
-                
-            ]),
-
+            
             dbc.Row([
                 html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
                 html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5")
@@ -153,6 +123,42 @@ app.layout = dbc.Container([
     
     
 ], fluid=True)
+
+stats_layout = dbc.Container([                 ##  statistics 
+    html.H2("Weather Statistics", className="text-center mt-4 mb-4"),
+
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="temp-graph"),
+                    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+
+                ])
+            ])
+        ])
+        
+    ]),
+
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="humidity-graph")
+                ])
+            ])
+        ], width=6),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="wind-graph")
+                ])
+            ])
+        ], width=6)
+            ]),
+
+
+])
 
 
 @app.callback(
