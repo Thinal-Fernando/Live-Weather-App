@@ -260,20 +260,21 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
         ]
     )
 
-    row = df.iloc[0]
-
-    card_data = [dbc.Card([
-        dbc.CardBody([
-            html.H6(row["time"].split(" ")[1],className="text-center" ),
-            html.Img(
-                src=f"http://openweathermap.org/img/wn/{row['icon']}@2x.png",
-                style={"width": "50px", "margin": "auto"}
-            ),
-            html.H6(f"{round(row['temp'], 1)}{unit_symbol}", className="text-center mt-2"),
-            html.Small(row["weather"], className="text-center d-block text-muted")
+    hourly_cards = []
+    for _, row in df.head(8).iterrows():
+        card_data = dbc.Card([
+            dbc.CardBody([
+                html.H6(row["time"].split(" ")[1],className="text-center" ),
+                html.Img(
+                    src=f"http://openweathermap.org/img/wn/{row['icon']}@2x.png",
+                    style={"width": "50px", "margin": "auto"}
+                ),
+                html.H6(f"{round(row['temp'], 1)}{unit_symbol}", className="text-center mt-2"),
+                html.Small(row["weather"], className="text-center d-block text-muted")
+            ])
         ])
-    ])
-    ]
+        hourly_cards.append(card_data)
+
 
 
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
@@ -326,7 +327,7 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
 )
      
 
-    return heading, weather_data, humidity_fig, wind_fig, map_fig, card_data
+    return heading, weather_data, humidity_fig, wind_fig, map_fig, hourly_cards
 
 @app.callback(
     Output("temp-graph", "figure"),
