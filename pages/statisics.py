@@ -9,15 +9,17 @@ dash.register_page(__name__, path='/stats', name='Stats')
 layout = dbc.Container([
     dbc.Row([
         dbc.Col([
+            html.H1("Weather Statistics"),
             dbc.Button("☰ Menu", id="menu-button", color="dark", className="mb-3"),
+            
             dbc.Offcanvas([
                 html.H5("Options", className="mb-3"),
                 html.Hr(),
-                dcc.Link("Home", href="/", className="mb-2 d-block"),
-                dcc.Link("Stats", href="/stats", className="mb-2 d-block"),
+                dbc.Button("Home", href="/", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),  
+                dbc.Button("Details", href="/stats",  id="btn-rain", color="primary", className="mb-2",  n_clicks=0),  
             ], id="sidebar-stats", placement="start", is_open=False),
 
-            html.H3("Weather Statistics"),
+            
             dcc.Input(id="city-name-stats", type="text", placeholder="Enter City..."),
             html.Button("Load Data", id="load-btn", n_clicks=0),
             dcc.Slider(id="temp-slider", min=0, max=50, step=1, value=50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),

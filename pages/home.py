@@ -16,10 +16,9 @@ layout = dbc.Container([
             dbc.Offcanvas([
                 html.H5("Options", className="mb-3"),
                 html.Hr(),
-                dbc.Button("Home", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),  
-                dbc.Button("Details", id="btn-rain", color="primary", className="mb-2",  n_clicks=0),
-            ], id="sidebar-home", placement="start", is_open=False),
-
+                dbc.Button("Home", href="/", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),  
+                dbc.Button("Details", href="/stats",  id="btn-rain", color="primary", className="mb-2",  n_clicks=0),  
+            ], id="sidebar-stats", placement="start", is_open=False),
 
             html.Div([
                 dcc.Graph(id="map-view", style={"height": "700px"}),
