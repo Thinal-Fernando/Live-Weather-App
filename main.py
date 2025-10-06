@@ -272,7 +272,7 @@ def update_weather(n,  temp_clicks, precipitation_clicks, pressure_clicks, wind_
                 html.H6(f"{round(row['temp'], 1)}{unit_symbol}", className="text-center mt-2"),
                 html.Small(row["weather"], className="text-center d-block text-muted")
             ])
-        ])
+        ], className="hourlyCards")
         hourly_cards.append(card_data)
 
 
