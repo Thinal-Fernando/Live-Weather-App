@@ -33,16 +33,16 @@ def get_weather(city, units = "metric"):
 
     return pd.DataFrame(forecast_dict), data["city"]
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
 
 app.sidebar = dbc.Offcanvas([                         ## SideBar
         html.H5("Options", className="mb-3"),
 
         html.Hr(),
 
-        dbc.Button("Home", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
+        dbc.Button("Home", href="/", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
 
-        dbc.Button("Details", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
+        dbc.Button("Details", href="/statistics", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
 
 
     ],id="sidebar", placement="start", is_open=False,
@@ -159,6 +159,22 @@ stats_layout = dbc.Container([                 ##  statistics
 
 
 ])
+
+app.layout = dbc.Container([
+    dcc.Location(id="url", refresh=False),
+    html.Div(id="page-content")
+], fluid=True)
+
+@app.callback(
+    Output("page-content", "children"),
+    Input("url", "pathname")
+)
+def display_page(pathname):
+    if pathname == "/statistics":
+        return stats_layout
+    else:
+        return home_layout
+
 
 
 @app.callback(
