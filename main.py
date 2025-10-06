@@ -33,16 +33,16 @@ def get_weather(city, units = "metric"):
 
     return pd.DataFrame(forecast_dict), data["city"]
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], suppress_callback_exceptions=True)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-app.sidebar = dbc.Offcanvas([                         ## SideBar
+app.sidebar = dbc.Offcanvas([
         html.H5("Options", className="mb-3"),
 
         html.Hr(),
 
-        dbc.Button("Home", href="/", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
+        dbc.Button("Home", id="btn-clouds", color="secondary", className="mb-2", n_clicks=0),
 
-        dbc.Button("Details", href="/statistics", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
+        dbc.Button("Details", id="btn-rain", color="primary", className="mb-2", n_clicks=0),
 
 
     ],id="sidebar", placement="start", is_open=False,
@@ -51,8 +51,7 @@ app.sidebar = dbc.Offcanvas([                         ## SideBar
 
 
 
-home_layout = dbc.Container([             ## Home
-
+app.layout = dbc.Container([
     dbc.Row([
         
         dbc.Col([
@@ -82,7 +81,38 @@ home_layout = dbc.Container([             ## Home
             ], style={"position": "relative"}),
             
             
-            
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="temp-graph"),
+                            dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+
+                        ])
+                    ])
+                ])
+                
+            ]),
+        
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="humidity-graph")
+                        ])
+                    ])
+                ], width=6),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            dcc.Graph(id="wind-graph")
+                        ])
+                    ])
+                ], width=6)
+
+                
+            ]),
+
             dbc.Row([
                 html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
                 html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5")
@@ -123,58 +153,6 @@ home_layout = dbc.Container([             ## Home
     
     
 ], fluid=True)
-
-stats_layout = dbc.Container([                 ##  statistics 
-    html.H2("Weather Statistics", className="text-center mt-4 mb-4"),
-
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="temp-graph"),
-                    dcc.Slider(id="temp-slider", min = 0, max=50, step=1, value= 50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
-
-                ])
-            ])
-        ])
-        
-    ]),
-
-    dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="humidity-graph")
-                ])
-            ])
-        ], width=6),
-        dbc.Col([
-            dbc.Card([
-                dbc.CardBody([
-                    dcc.Graph(id="wind-graph")
-                ])
-            ])
-        ], width=6)
-            ]),
-
-
-])
-
-app.layout = dbc.Container([
-    dcc.Location(id="url", refresh=False),
-    html.Div(id="page-content")
-], fluid=True)
-
-@app.callback(
-    Output("page-content", "children"),
-    Input("url", "pathname")
-)
-def display_page(pathname):
-    if pathname == "/statistics":
-        return stats_layout
-    else:
-        return home_layout
-
 
 
 @app.callback(
