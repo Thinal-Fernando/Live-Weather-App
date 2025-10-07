@@ -22,12 +22,38 @@ layout = dbc.Container([
             
             dcc.Input(id="city-name-stats", type="text", placeholder="Enter City..."),
             html.Button("Load Data", id="load-btn", n_clicks=0),
-            dcc.Slider(id="temp-slider", min=0, max=50, step=1, value=50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
-            dcc.Graph(id="temp-graph"),
-            dcc.Graph(id="humidity-graph"),
-            dcc.Graph(id="wind-graph"),
+            
+           
+            
         ])
-    ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Slider(id="temp-slider", min=0, max=50, step=1, value=50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
+                    dcc.Graph(id="temp-graph"),
+                ])
+            ])
+        ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                     dcc.Graph(id="humidity-graph"),
+                ])
+            ])
+        ], width=6),
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    dcc.Graph(id="wind-graph"),
+                ])
+            ])
+        ], width=6),
+
+    ]),
 ], fluid=True)
 
 @dash.callback(
