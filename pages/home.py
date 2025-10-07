@@ -3,6 +3,7 @@ from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 from utils import get_weather, api_key
+import pandas as pd
 
 dash.register_page(__name__, path='/', name='Home')
 
@@ -89,6 +90,7 @@ def toggle_sidebar(n, is_open):
     Output("current-weather", "children"),
     Output("map-view", "figure"),
     Output("hourly-cards", "children"),
+    Output("shared-city-data", "data"),
     Input("search-btn", "n_clicks"),
     Input("temp-overlay", "n_clicks"),
     Input("precipitation-overlay", "n_clicks"),
@@ -101,7 +103,7 @@ def toggle_sidebar(n, is_open):
 def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_clicks, cloud_clicks, units, city):
     data = get_weather(city, units)
     if not data:
-        return "City Not Found"
+        return "City Not Found", "", {}, [], None
 
     df, city_info = data
 
@@ -222,4 +224,9 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
         "layers": [{"sourcetype":"raster","source":[overlay_url],"below":"traces"}] if overlay_url else []
     })
 
-    return heading, weather_data, map_fig, hourly_cards
+    store_data = {
+        "df": df.to_dict("records"),
+        "city_info": city_info
+    }
+
+    return heading, weather_data, map_fig, hourly_cards, store_data
