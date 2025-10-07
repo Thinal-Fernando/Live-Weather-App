@@ -215,7 +215,16 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
 
     if ctx.triggered:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
-        if button_id in layer_urls:
+
+        clicks = {
+            "temp-overlay": temp_clicks,
+            "precipitation-overlay" :precipitation_clicks,
+            "pressure-overlay": pressure_clicks,
+            "wind-overlay": wind_clicks,
+            "cloud-overlay": cloud_clicks
+        }
+
+        if button_id in layer_urls and clicks[button_id] > 0:
             overlay_url = layer_urls[button_id]
             zoom_level = 5
 
