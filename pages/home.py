@@ -39,9 +39,6 @@ layout = dbc.Container([
 
             ], style={"position": "relative"}),
 
-            html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
-            html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5"),
-
         ], width=9),
 
         dbc.Col([
@@ -68,6 +65,17 @@ layout = dbc.Container([
 
             ], style={"height" : "100%"})
         ],width=3),
+    
+    dbc.Row([
+        dbc.Col([
+            
+
+            html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
+            html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5"),
+        ])
+    ])
+
+        
 
     ])
 ], fluid=True)
