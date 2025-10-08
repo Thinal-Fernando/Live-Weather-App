@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 from utils import get_weather, api_key
 import pandas as pd
+from datetime import datetime
 
 dash.register_page(__name__, path='/', name='Home')
 
@@ -186,9 +187,12 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
 
     hourly_cards = []
     for _, row in df.head(8).iterrows():
+        local_time = datetime.strptime(row["time"], "%Y-%m-%d %H:%M:%S")
+        formatted_time = local_time.strftime("%a %I %p").lstrip("0")
+
         card_data = dbc.Card([
             dbc.CardBody([
-                html.H6(row["time"].split(" ")[1],className="text-center" ),
+                html.H6(formatted_time,className="text-center" ),
                 html.Img(
                     src=f"http://openweathermap.org/img/wn/{row['icon']}@2x.png", 
                     style={"width": "50px", "margin": "auto"}
