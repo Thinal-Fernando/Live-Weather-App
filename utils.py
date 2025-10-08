@@ -2,6 +2,7 @@ import requests
 import os
 import pandas as pd
 from dotenv import load_dotenv
+from datetime import datetime,timezone, timedelta
 
 load_dotenv()
 api_key = os.getenv("OpenWeather_API_KEY")
@@ -13,11 +14,16 @@ def get_weather(city, units = "metric"):
         return None
     
     data = r.json()
+    timezone_offset = data["city"]["timezone"]
 
     forecast_dict = []
     for entry in data["list"]:
+
+        utc_time = datetime.fromtimestamp(entry["dt"], tz=timezone.utc)
+        local_time = utc_time + timedelta(seconds=timezone_offset)
+
         forecast_dict.append({
-            "time": entry["dt_txt"],
+            "time": local_time.strftime("%Y-%m-%d %H:%M:%S"),
             "temp": entry["main"]["temp"],
             "weather": entry["weather"][0]["main"],
             "humidity": entry["main"]["humidity"],
