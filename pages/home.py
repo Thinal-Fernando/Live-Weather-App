@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.express as px
 from utils import get_weather, api_key
 import pandas as pd
-from datetime import datetime
+from datetime import datetime,timezone, timedelta
 
 dash.register_page(__name__, path='/', name='Home')
 
@@ -116,6 +116,12 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
 
     df, city_info = data
 
+    timezone_offset = city_info["timezone"]
+    utc_now = datetime.now(timezone.utc)
+    local_time = utc_now + timedelta(seconds=timezone_offset)
+    local_time_str = local_time.strftime("%a %I:%M %p") 
+
+
     heading = html.H1([ "Welcome to the Weather APP" if city is None else f"Viewing: {city}" ])
 
     current_weather_data = df.iloc[0]
@@ -144,7 +150,7 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
                                         className="d-flex",
                                         children=[
                                             html.H6(city, className="flex-grow-1"),
-                                            html.H6(current_weather_data["time"].split(" ")[1])
+                                            html.H6(local_time_str)
                                         ]
                                     ),
                                     html.Div(
