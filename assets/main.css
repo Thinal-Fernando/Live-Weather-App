@@ -16,5 +16,14 @@
     text-Align: center;
     border-Radius: 10px;
     box-Shadow: 0 2px 6px rgba(0,0,0,0.1);
+    min-width: 130px;
+    display: inline-block;
 }
 
+.hourly_cards_container{
+    overflow-x: auto;     
+    white-space: nowrap; 
+    gap: 10px;              
+    padding: 10px 0;        
+    scroll-behavior: smooth; 
+}

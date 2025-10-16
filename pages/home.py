@@ -72,7 +72,7 @@ layout = dbc.Container([
             
 
             html.H3("Hourly Forecast", className="mt-4 mb-3 text-center"),
-            html.Div(id="hourly-cards", className="d-flex flex-wrap justify-content-center gap-3 mb-5"),
+            html.Div(id="hourly-cards", className="d-flex gap-3 mb-5 hourly_cards_container"),
         ])
     ])
 
