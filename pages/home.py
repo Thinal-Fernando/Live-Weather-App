@@ -221,7 +221,12 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
                                 "Humidity (%)": [df.iloc[0]["humidity"]],
                                 "Wind (m/s)": [df.iloc[0]["wind"]],
                             } )
-    map_fig.update_layout(mapbox_style="open-street-map")
+    map_fig.update_layout(mapbox_style="open-street-map",
+                          hoverlabel=dict(
+                              bgcolor="rgba(30, 30, 30, 0.9)",  
+                              font_color="white",
+                              font_size=14,      
+                          ))
 
     layer_urls = {
         "temp-overlay": f"https://tile.openweathermap.org/map/temp_new/{{z}}/{{x}}/{{y}}.png?appid={api_key}",
