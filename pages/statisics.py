@@ -29,6 +29,18 @@ layout = dbc.Container([
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
+                    dcc.Dropdown(options=[{"label": "Temperature", "value": "temp"},
+                                          {"label": "Humidity", "value": "humidity"},
+                                          {"label": "Wind Speed", "value": "wind"},], value= None, placeholder="Select a Condition", id="weather-filter"),
+                    dcc.Graph(id="line-graph")
+                ])
+            ])
+        ])
+    ]),
+    dbc.Row([
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
                     dcc.Slider(id="temp-slider", min=0, max=50, step=1, value=50, marks={0:"0°C",10:"10°C",20:"20°C",30:"30°C",40:"40°C",50:"50°C"}),
                     dcc.Graph(id="temp-graph"),
                 ])
@@ -80,6 +92,8 @@ def update_stats(data, max_temp):
     
     df = pd.DataFrame(data["df"])
     city_info = data["city_info"]
+
+    
 
     temp_fig = px.histogram(df[df["temp"] <= max_temp], x="temp", nbins=10, title=f"Temperature <= {max_temp}")
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
