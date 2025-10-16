@@ -192,7 +192,7 @@ def update_weather(n, temp_clicks, precipitation_clicks, pressure_clicks, wind_c
     )
 
     hourly_cards = []
-    for _, row in df.head(8).iterrows():
+    for _, row in df.head(24).iterrows():
         local_time = datetime.strptime(row["time"], "%Y-%m-%d %H:%M:%S")
         formatted_time = local_time.strftime("%a %I %p").lstrip("0")
 
