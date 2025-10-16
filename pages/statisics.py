@@ -78,25 +78,35 @@ def toggle_sidebar(n, is_open):
 
 
 @dash.callback(
+    Output("line-graph", "figure"),
     Output("temp-graph", "figure"),
     Output("humidity-graph", "figure"),
     Output("wind-graph", "figure"),
     Input("shared-city-data", "data"),
+    Input("weather-filter", "value"),
     Input("temp-slider", "value"),
 
 )
-def update_stats(data, max_temp):
+def update_stats(data, weather_condition, max_temp):
     if not data or "df" not in data or "city_info" not in data:
-        return px.scatter(), px.scatter(), px.scatter()
+        return px.scatter(), px.scatter(), px.scatter(), px.scatter()
 
     
     df = pd.DataFrame(data["df"])
     city_info = data["city_info"]
 
-    
+    if weather_condition == "temp":
+        line_graph = px.line(df, x="time", y="temp", title="Temperature Over Time")
+    elif weather_condition == "humidity":
+        line_graph = px.line(df, x="time", y="humidity", title="Humidity Over Time")
+    elif weather_condition == "wind":
+        line_graph = px.line(df, x="time", y="wind", title="Wind Speed Over Time")
+    else:
+        line_graph = px.scatter(title="Select a weather condition")
+
 
     temp_fig = px.histogram(df[df["temp"] <= max_temp], x="temp", nbins=10, title=f"Temperature <= {max_temp}")
     humidity_fig = px.line(df, x="time", y="humidity", title="Humidity Over Time")
     wind_fig = px.line(df, x="time", y="wind", title="Wind Speed Over Time")
 
-    return temp_fig, humidity_fig, wind_fig
+    return line_graph, temp_fig, humidity_fig, wind_fig
